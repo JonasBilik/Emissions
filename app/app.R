@@ -6,27 +6,26 @@
 rm(list = ls())
 
 # packages
-packages <- c("readxl", "dplyr", "shiny", "ggplot2", "plotly", "DT", "rsconnect")
-
-lapply(packages, function(x) {
-  if(!require(x, character.only = TRUE)) {
-    install.packages(x, dependencies = TRUE)
-  }
-  library(x, character.only = TRUE)
-})
-
-rm(packages)
+library(readxl)
+library(dplyr)
+library(shiny)
+library(ggplot2)
+library(plotly)
+library(DT)
+library(rsconnect)
 
 
 # path
-path.data <- "C:/Users/jonas/sciebo2/Persönlich/Bewerbung/pwc/app/"
+#path.data <- paste0(getwd(),"/app/")
 
 
 #--------------------------------#
 # 1. load & prepare datasers ####
 #--------------------------------#
 
-data <- read_xlsx(paste0(path.data,"owid-co2-data.xlsx"))
+#data <- read_xlsx(paste0(path.data,"owid-co2-data.xlsx"))
+
+data <- read_xlsx("owid-co2-data.xlsx")
 
 data <- data %>%
   select(country, year, population, gdp, co2, co2_per_capita, cement_co2, coal_co2, gas_co2, oil_co2, 
@@ -157,5 +156,9 @@ server <- function(input, output, session) {
   )
 }
 
+
+
 # Run the Shiny app
 shinyApp(ui = ui, server = server)
+
+rsconnect::deployApp(appDir = "C:/GIT/Emissions/app", appName = "emissions_dashboard")
